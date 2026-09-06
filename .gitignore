@@ -1,0 +1,46 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.venv/
+venv/
+env/
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# Environment & API Keys — NEVER COMMIT REAL KEYS
+.env
+.env.*
+!.env.example
+
+# Data & Database — Local SQLite DB and AgenticLens artifacts
+data/
+*.db
+*.sqlite
+workflow.json
+run_trace*.json
+chaos_run*.json
+evaluation*.json
+*.html
+
+# IDE & Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS & System
+.DS_Store
+Thumbs.db
+
+# Docker & Agent IDE
+.docker/
+.gemini/
+.antigravity/
+.antigravityignore
+brain/
+scratch/

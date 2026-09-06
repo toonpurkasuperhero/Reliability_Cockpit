@@ -1,0 +1,46 @@
+version: "3.9"
+
+services:
+  # ── Agent service (stateless, callable via API) ──────────────────────────
+  agent:
+    build:
+      context: .
+      dockerfile: Dockerfile.agent
+    environment:
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY}
+      - AGENT_MODEL=${AGENT_MODEL:-gemini-2.0-flash}
+      - JUDGE_MODEL=${JUDGE_MODEL:-gemini-1.5-pro}
+      - DATABASE_PATH=/app/data/reliability_cockpit.db
+      - LOG_LEVEL=${LOG_LEVEL:-INFO}
+    volumes:
+      - ./data:/app/data
+    ports:
+      - "8001:8001"
+    networks:
+      - reliability-net
+
+  # ── Dashboard service (reads shared SQLite volume) ────────────────────────
+  dashboard:
+    build:
+      context: .
+      dockerfile: Dockerfile.dashboard
+    environment:
+      - DATABASE_PATH=/app/data/reliability_cockpit.db
+      - DASHBOARD_HOST=0.0.0.0
+      - DASHBOARD_PORT=8000
+      - DASHBOARD_SECRET_KEY=${DASHBOARD_SECRET_KEY:-dev-secret}
+    volumes:
+      - ./data:/app/data
+    ports:
+      - "8000:8000"
+    depends_on:
+      - agent
+    networks:
+      - reliability-net
+
+networks:
+  reliability-net:
+    driver: bridge
+
+volumes:
+  data:
